@@ -10,6 +10,7 @@ temp_presion = 0
 temp_temperatura = 0
 temp_porcentaje = 0
 temp_ciclos = 0
+temp_alarma = 0
 
 # conexión a la base de datos MariaDB
 try:
@@ -25,6 +26,7 @@ while 1:
     inputTemperatura = input("Temperatura: ")
     inputPorcentaje = input("Porcentaje: ")
     inputCiclos = input("Ciclos: ")
+    inputAlarma = input("Alarma: ")
 
     #asignar valores obtenidos
     porcentaje = inputPorcentaje
@@ -35,14 +37,18 @@ while 1:
     cilindro = 1
     equipo = 1
     operador = 1002
+    #asignar valores obtenidos para alarma_tipos
+    alarma = inputAlarma
+    status = 1
+    tipo = 1
+
+    #obtener fecha y hora actual
+    now = datetime.now()
+    dt_now = now.strftime("%Y-%m-%d %H:%M:%S")
+    fecha = dt_now
 
 
     if temp_presion != presion or temp_temperatura != temperatura or temp_porcentaje != porcentaje or temp_ciclos != ciclos:
-        #obtener fecha y hora actual
-        now = datetime.now()
-        dt_now = now.strftime("%Y-%m-%d %H:%M:%S")
-        fecha = dt_now
-
         #cambiar valores temporales al detectar cambio
         temp_presion = presion
         temp_temperatura = temperatura
@@ -65,11 +71,34 @@ while 1:
         #confirmar y deshacer transacciones
         conn.commit()
         #imprimir id del ultimo registro
-        print(f"Último registro ID: {cur.lastrowid}")
+        print(f"Último registro llenados ID: {cur.lastrowid}")
         #cerrar conexion a base de datos
         conn.close
     else:
-        print("Sin cambios")
+        print("Sin cambios en lleandos")
+
+    if temp_alarma != alarma:
+        temp_alarma = alarma
+        try:
+            #obtener cursor de conexión a base de datos
+            cur = conn.cursor()
+            #query para insertar en base de datos MariaDB
+            cur.execute("INSERT INTO alarmas "+
+                        "(fecha, status, equipo, alarma_tipos) "+
+                        "VALUES (?, ?, ?, ?)",
+                        (fecha, status, equipo, tipo))
+
+        except mariadb.Error as e:
+            print(f"Error: {e}")
+
+        #confirmar y deshacer transacciones
+        conn.commit()
+        #imprimir id del ultimo registro
+        print(f"Último registro alarma ID: {cur.lastrowid}")
+        #cerrar conexion a base de datos
+        conn.close
+    else:
+        print("Sin cambios en alarmas")
 
     #retraso de ejecución en segundos
     time.sleep(5)

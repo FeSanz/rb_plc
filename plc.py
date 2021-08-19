@@ -12,6 +12,8 @@ temp_temperatura = 0
 temp_porcentaje = 0
 temp_ciclos = 0
 
+temp_alarma = 0
+
 #conexión a modbus con ip-puerto
 client = ModbusClient('192.168.1.200', port=502)
 
@@ -28,7 +30,7 @@ while 1:
     #obtener arreglo de datos del PLC [1er equipo]
     rh = client.read_holding_registers(602,5,unit=UNIT)
 
-    #asignar valores obtenidos
+    #asignar valores obtenidos para llenados
     porcentaje = 50
     presion = rh.registers[2]
     temperatura = int(rh.registers[3]/10)
@@ -38,12 +40,17 @@ while 1:
     equipo = 1
     operador = 1002
 
-    if temp_presion != presion or temp_temperatura != temperatura or temp_porcentaje != porcentaje or temp_ciclos != ciclos:
-        #obtener fecha y hora actual
-        now = datetime.now()
-        dt_now = now.strftime("%Y-%m-%d %H:%M:%S")
-        fecha = dt_now
+    #asignar valores obtenidos para alarma_tipos
+    alarma = rh.registers[0]
+    status = 1
+    tipo = 1
 
+    #obtener fecha y hora actual
+    now = datetime.now()
+    dt_now = now.strftime("%Y-%m-%d %H:%M:%S")
+    fecha = dt_now
+
+    if temp_presion != presion or temp_temperatura != temperatura or temp_porcentaje != porcentaje or temp_ciclos != ciclos:
         #cambiar valores temporales al detectar cambio
         temp_presion = presion
         temp_temperatura = temperatura
@@ -56,13 +63,13 @@ while 1:
         try:
             #query para insertar en base de datos MariaDB
             cur.execute("INSERT INTO llenados "+
-                        "(fecha,porcentaje,presion,temperatura,status_bomba,ciclos,cilindro,equipo,operador) "+
+                        "(fecha, porcentaje, presion, temperatura, status_bomba, ciclos, cilindro, equipo, operador) "+
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (fecha, porcentaje, presion, temperatura, status_bomba, ciclos, cilindro, equipo, operador))
 
         except mariadb.Error as e:
             print(f"Error: {e}")
-        
+
         #confirmar y deshacer transacciones
         conn.commit()
         #imprimir id del ultimo registro
@@ -70,7 +77,28 @@ while 1:
         #cerrar conexion a base de datos
         conn.close
     else:
-        print("Sin cambios")
+        print("Sin cambios en llenados")
+
+    if temp_alarma != alarma:
+        temp_alarma = alarma
+        try:
+            #query para insertar en base de datos MariaDB
+            cur.execute("INSERT INTO alarmas "+
+                        "(fecha, status, equipo, alarma_tipos) "+
+                        "VALUES (?, ?, ?, ?)",
+                        (fecha, status, equipo, tipo))
+
+        except mariadb.Error as e:
+            print(f"Error: {e}")
+
+        #confirmar y deshacer transacciones
+        conn.commit()
+        #imprimir id del ultimo registro
+        print(f"Último registro ID: {cur.lastrowid}")
+        #cerrar conexion a base de datos
+        conn.close
+    else:
+        print("Sin cambios en alarmas")
 
     #cierre de conexión modbus
     client.close()
