@@ -25,15 +25,15 @@ temp_ciclos = 0
 temp_alarma = 0
 
 #conexión a modbus con ip-puerto
-client = ModbusClient('192.168.1.200', port=502)
+#client = ModbusClient('192.168.1.200', port=502)
 
 parser = argparse.ArgumentParser(description="Send and receive messages through and MQTT connection.")
-parser.add_argument('--endpoint', required=True, help="Your AWS IoT custom endpoint, not including a port. " +
+parser.add_argument('--endpoint', default="a19egjpzgi9ikd-ats.iot.us-west-1.amazonaws.com", help="Your AWS IoT custom endpoint, not including a port. " +
                                                       "Ex: \"abcd123456wxyz-ats.iot.us-east-1.amazonaws.com\"")
 parser.add_argument('--port', type=int, help="Specify port. AWS IoT supports 443 and 8883.")
-parser.add_argument('--cert', help="File path to your client certificate, in PEM format.")
-parser.add_argument('--key', help="File path to your private key, in PEM format.")
-parser.add_argument('--root-ca', help="File path to root certificate authority, in PEM format. " +
+parser.add_argument('--cert', default = "af895ae3f3926b675823a573f233c8ec4722b7e508bc987f96e3234249f7880b-certificate.pem.crt", help="File path to your client certificate, in PEM format.")
+parser.add_argument('--key', default="af895ae3f3926b675823a573f233c8ec4722b7e508bc987f96e3234249f7880b-private.pem.key", help="File path to your private key, in PEM format.")
+parser.add_argument('--root-ca', default="AmazonRootCA1.pem", help="File path to root certificate authority, in PEM format. " +
                                       "Necessary if MQTT server uses a certificate that's not already in " +
                                       "your trust store.")
 parser.add_argument('--client-id', default="test-" + str(uuid4()), help="Client ID for MQTT connection.")
@@ -158,22 +158,22 @@ if __name__ == '__main__':
         while (publish_count <= args.count) or (args.count == 0):
 
             # conexion modbus
-            client.connect()
+            #client.connect()
             # obtener arreglo de datos del PLC [1er equipo]
-            rh = client.read_holding_registers(602, 5, unit=UNIT)
+            #rh = client.read_holding_registers(602, 5, unit=UNIT)
 
             # asignar valores obtenidos para llenados
             porcentaje = 50
-            presion = rh.registers[2]
-            temperatura = int(rh.registers[3] / 10)
+            presion = 1 #rh.registers[2]
+            temperatura = 2 #int(rh.registers[3] / 10)
             estatus_bomba = 1
-            ciclos = rh.registers[4]
-            cilindro = rh.registers[1]
+            ciclos = 3  #rh.registers[4]
+            cilindro = 4    #rh.registers[1]
             equipo = 1
             operador = 1002
 
             # asignar valores obtenidos para alarma_tipos
-            alarma = rh.registers[0]
+            alarma = PA #rh.registers[0]
             estatus = 1
             equipo = 1
 
@@ -232,7 +232,7 @@ if __name__ == '__main__':
                 print("Sin cambios en alarmas")
 
             # cierre de conexión modbus
-            client.close()
+            #client.close()
 
             # retraso de ejecución en segundos
             time.sleep(5)
@@ -243,5 +243,4 @@ if __name__ == '__main__':
     disconnect_future.result()
     print("Disconnected!")
 
-#python3 pubsub.py --root-ca ~/Certs/AmazonRootCA1.pem --cert ~/Certs/af895ae3f3926b675823a573f233c8ec4722b7e508bc987f96e3234249f7880b-certificate.pem.crt --key ~/Certs/af895ae3f3926b675823a573f233c8ec4722b7e508bc987f96e3234249f7880b-private.pem.key --endpoint a19egjpzgi9ikd-ats.iot.us-west-1.amazonaws.com
 #python3 pubsub.py --root-ca ~/Certs/AmazonRootCA1.pem --cert ~/Certs/af895ae3f3926b675823a573f233c8ec4722b7e508bc987f96e3234249f7880b-certificate.pem.crt --key ~/Certs/af895ae3f3926b675823a573f233c8ec4722b7e508bc987f96e3234249f7880b-private.pem.key --endpoint a19egjpzgi9ikd-ats.iot.us-west-1.amazonaws.com
