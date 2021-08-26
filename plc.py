@@ -79,8 +79,8 @@ while 1:
     else:
         print("Sin cambios en llenados")
 
-    if temp_alarma != alarma:
-        temp_alarma = alarma
+    if alarma != 0:
+        #temp_alarma = alarma 
         try:
             #query para insertar en base de datos MariaDB
             cur.execute("INSERT INTO alarmas "+
