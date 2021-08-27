@@ -217,8 +217,8 @@ if __name__ == '__main__':
             else:
                 print("Sin cambios en llenados")
 
-            if temp_alarma != alarma:
-                temp_alarma = alarma
+            if alarma != 0:
+                #temp_alarma = alarma
 
                 print("Publishing message to topic '{}': {}".format(args.topic, messageIncidentes))
                 message_json = json.dumps(messageIncidentes)
