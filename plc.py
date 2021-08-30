@@ -44,7 +44,7 @@ def RegistrarLlenado(fecha, porcentaje, presion, temperatura, status_bomba, cicl
         print(f"Error: {e}")
 
     conn.commit()
-    print(f"Último registro de llenado equipo " + equipo +" ID: {cur.lastrowid}")
+    print(f"Último registro de llenado equipo " + str(equipo) +" ID: {cur.lastrowid}")
     conn.close
 
 # registro de alarmas a base de datos
@@ -60,7 +60,7 @@ def RegistrarAlarma(fecha, status, equipo, alarma_tipos):
         print(f"Error: {e}")
 
     conn.commit()
-    print(f"Último registro de alarma equipo" + equipo +" ID: {cur.lastrowid}")
+    print(f"Último registro de alarma equipo" + str(equipo) +" ID: {cur.lastrowid}")
     conn.close
 
 
