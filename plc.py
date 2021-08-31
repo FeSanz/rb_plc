@@ -13,7 +13,7 @@ temp_porcentaje = 0
 temp_ciclos = 0
 
 #variables temporales para validacion de cambios
-'''[0]presion, [1]temperatura, [2]porcentaje, [3]ciclos'''
+'''[0]presion, [1]temperatura, [2]porcentaje, [3]ciclos, [4]alarma'''
 temp_rh = [0, 0, 0, 0, 0]
 temp_ri = [0, 0, 0, 0, 0]
 temp_rj = [0, 0, 0, 0, 0]
@@ -93,7 +93,8 @@ while 1:
     else:
         print("Sin cambios en llenados equipo 1")
 
-    if rh.registers[0] != 0: 
+    if rh.registers[0] != 0 and temp_rh[4] != rh.registers[0]: 
+        temp_rh[4] = rh.registers[0]
         RegistrarAlarma(fecha, 1, 1, rh.registers[0])
     else:
         print("Sin cambios en alarmas equipo 1")
@@ -109,7 +110,8 @@ while 1:
     else:
         print("Sin cambios en llenados equipo 2")
 
-    if ri.registers[0] != 0: 
+    if ri.registers[0] != 0 and temp_ri[4] != ri.registers[0]: 
+        temp_ri[4] = ri.registers[0]
         RegistrarAlarma(fecha, 1, 2, ri.registers[0])
     else:
         print("Sin cambios en alarmas equipo 2")
@@ -125,7 +127,8 @@ while 1:
     else:
         print("Sin cambios en llenados equipo 3")
 
-    if rj.registers[0] != 0: 
+    if rj.registers[0] != 0 and temp_rj[4] != rj.registers[0]: 
+        temp_rj[4] = rj.registers[0] 
         RegistrarAlarma(fecha, 1, 3, rj.registers[0])
     else:
         print("Sin cambios en alarmas equipo 3")
@@ -142,7 +145,8 @@ while 1:
     else:
         print("Sin cambios en llenados equipo 4")
 
-    if rk.registers[0] != 0: 
+    if rk.registers[0] != 0 and temp_rk[4] != rk.registers[0]: 
+        temp_rk[4] = rk.registers[0] 
         RegistrarAlarma(fecha, 1, 4, rk.registers[0])
     else:
         print("Sin cambios en alarmas equipo 4")
@@ -158,7 +162,8 @@ while 1:
     else:
         print("Sin cambios en llenados equipo 5")
 
-    if rl.registers[0] != 0: 
+    if rl.registers[0] != 0 and temp_rl[4] != rl.registers[0]: 
+        temp_rl[4] = rl.registers[0] 
         RegistrarAlarma(fecha, 1, 5, rl.registers[0])
     else:
         print("Sin cambios en alarmas equipo 5")
