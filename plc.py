@@ -97,6 +97,7 @@ while 1:
         temp_rh[4] = rh.registers[0]
         RegistrarAlarma(fecha, 1, 1, rh.registers[0])
     else:
+        temp_rh[4] = rh.registers[0]
         print("Sin cambios en alarmas equipo 1")
 
     #Valida cambio (presion || temperatura || porcentaje || ciclos) 2er equipo
@@ -114,6 +115,7 @@ while 1:
         temp_ri[4] = ri.registers[0]
         RegistrarAlarma(fecha, 1, 2, ri.registers[0])
     else:
+        temp_ri[4] = ri.registers[0]
         print("Sin cambios en alarmas equipo 2")
 
     #Valida cambio (presion || temperatura || porcentaje || ciclos) 3er equipo
@@ -131,6 +133,7 @@ while 1:
         temp_rj[4] = rj.registers[0] 
         RegistrarAlarma(fecha, 1, 3, rj.registers[0])
     else:
+        temp_rj[4] = rj.registers[0] 
         print("Sin cambios en alarmas equipo 3")
 
 
@@ -149,6 +152,7 @@ while 1:
         temp_rk[4] = rk.registers[0] 
         RegistrarAlarma(fecha, 1, 4, rk.registers[0])
     else:
+        temp_rk[4] = rk.registers[0]
         print("Sin cambios en alarmas equipo 4")
 
     #Valida cambio (presion || temperatura || porcentaje || ciclos) 5to equipo
@@ -166,6 +170,7 @@ while 1:
         temp_rl[4] = rl.registers[0] 
         RegistrarAlarma(fecha, 1, 5, rl.registers[0])
     else:
+        temp_rl[4] = rl.registers[0]
         print("Sin cambios en alarmas equipo 5")
 
 
